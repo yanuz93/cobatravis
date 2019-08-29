@@ -22,17 +22,17 @@ class ProductSeller extends React.Component {
   }
   setName = async event => {
     event.preventDefault();
-    await this.setState({ product_name: event.target.value });
+    await this.setState({ name: event.target.value });
   };
 
   setDescription = async event => {
     event.preventDefault();
-    await this.setState({ product_description: event.target.value });
+    await this.setState({ description: event.target.value });
   };
 
   setStock = async event => {
     event.preventDefault();
-    await this.setState({ product_stock: event.target.value });
+    await this.setState({ stock: event.target.value });
   };
 
   setWeight = async event => {
@@ -42,12 +42,12 @@ class ProductSeller extends React.Component {
 
   setPrice = async event => {
     event.preventDefault();
-    await this.setState({ product_price: event.target.value });
+    await this.setState({ unit_price: event.target.value });
   };
 
   setImageURL = async event => {
     event.preventDefault();
-    await this.setState({ product_image_url: event.target.value });
+    await this.setState({ url_foto: event.target.value });
   };
 
   setCategoryID = async event => {
@@ -91,7 +91,7 @@ class ProductSeller extends React.Component {
     const self = this;
     await axios
       .put(
-        this.props.host + "product/" + String(e.target.value),
+        self.props.host + "product/" + String(e.target.value),
         {
           name: self.state.name,
           description: self.state.description,
@@ -123,7 +123,7 @@ class ProductSeller extends React.Component {
     console.log(e.target.value);
     const self = this;
     await axios
-      .delete(this.props.host + "product/" + String(e.target.value), {
+      .delete(self.props.host + "product/" + String(e.target.value), {
         headers: {
           Authorization:
             "Bearer " + String(localStorage.getItem("seller_token"))
@@ -141,7 +141,7 @@ class ProductSeller extends React.Component {
   componentDidMount = async () => {
     const self = this;
     await axios
-      .get(this.props.host + "product/all", {
+      .get(this.props.host + "product/list", {
         headers: {
           Authorization:
             "Bearer " + String(localStorage.getItem("seller_token"))
