@@ -2,13 +2,16 @@ sudo: required
 language: generic
 services:
 - docker
+- yarn
 os:
-- linux
+- linu  x
 env:
   global:
   - DOCKER_IMAGE_NAME="react-front"
   - DOCKER_HUB_ORG="mathricks"
 before_script:
+- openssl aes-256-cbc -K $encrypted_1769b56d1f64_key -iv $encrypted_1769b56d1f64_iv
+  -in deploy_rsa.enc -out deploy_rsa -d
 - openssl aes-256-cbc -K $encrypted_d97ef4924d20_key -iv $encrypted_d97ef4924d20_iv
   -in deploy_rsa.enc -out deploy_rsa -d
 - eval "$(ssh-agent -s)"
@@ -18,6 +21,7 @@ before_script:
 script:
 - sudo chmod +x deploy.sh
 - sudo chmod 600 deploy_rsa
+- CI=false yarn build
 after_script:
 - docker login -u "${DOCKER_USERNAME}" -p "${DOCKER_PASSWORD}"
 - docker build -t ${DOCKER_HUB_ORG}/${DOCKER_IMAGE_NAME}:production-${TRAVIS_BUILD_ID}
@@ -29,5 +33,7 @@ after_script:
 - ssh-keyscan -H $SSH_IP >> ~/.ssh/known_hosts
 - ssh -v -i deploy_rsa $SSH_USER@$SSH_IP DIR=$ROOT_DIR 'bash -s' < deploy.sh
 before_install:
+- openssl aes-256-cbc -K $encrypted_1769b56d1f64_key -iv $encrypted_1769b56d1f64_iv
+  -in deploy_rsa.enc -out deploy_rsa -d
 - openssl aes-256-cbc -K $encrypted_d97ef4924d20_key -iv $encrypted_d97ef4924d20_iv
   -in deploy_rsa.enc -out deploy_rsa -d
